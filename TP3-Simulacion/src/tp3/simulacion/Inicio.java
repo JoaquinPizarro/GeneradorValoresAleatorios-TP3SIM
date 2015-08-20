@@ -20,12 +20,6 @@ public class Inicio extends javax.swing.JPanel {
         this.jPanel_Param_Unif.setVisible(false);
         this.jPanel_Param_Normal.setVisible(false);
         
-        
-        
-        
-        
-        
-        
     }
     public void generarValoresDistUniforme(int paramA, int paramB, int cantVal)
     {
@@ -85,6 +79,29 @@ public class Inicio extends javax.swing.JPanel {
            
         }
     }
+    public void generarValoresDistPoisson(int lambda, int cantVal)
+    {
+        int n=0;
+        double a = Math.pow(Math.E, -(lambda));
+        double b=1;
+        double i=0;
+        this.jTable1.addRowSelectionInterval(0, cantVal);
+        
+        for (int j = 0; j < cantVal; j++) {
+            n=j+1;
+            this.jTable1.setValueAt(n, j, 1);
+            while(b>=a)
+            {
+            i++;
+            b*=Math.random();
+            }
+            this.jTable1.setValueAt(i, j, 2);
+            i=0;
+            
+        }
+        
+        
+    }
     
 
     /**
@@ -130,6 +147,11 @@ public class Inicio extends javax.swing.JPanel {
         txt_b = new javax.swing.JTextField();
         jLabel10 = new javax.swing.JLabel();
         txt_cantVal_Unif = new javax.swing.JTextField();
+        jPanel_Param_Poisson = new javax.swing.JPanel();
+        jLabel15 = new javax.swing.JLabel();
+        txt_lambda_DistPoisson = new javax.swing.JTextField();
+        jLabel16 = new javax.swing.JLabel();
+        txt_cantVal_DistPoisson = new javax.swing.JTextField();
         jLabel14 = new javax.swing.JLabel();
         txt_cantIntervalos = new javax.swing.JTextField();
 
@@ -155,6 +177,11 @@ public class Inicio extends javax.swing.JPanel {
         });
 
         btn_Poisson.setText("Poisson");
+        btn_Poisson.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_PoissonActionPerformed(evt);
+            }
+        });
 
         btn_Normal.setText("Normal");
         btn_Normal.addActionListener(new java.awt.event.ActionListener() {
@@ -274,14 +301,46 @@ public class Inicio extends javax.swing.JPanel {
 
         jPanel_Param_Normal.add(jPanel_Param_Unif, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
 
+        jLabel15.setText("Lambda:");
+
+        jLabel16.setText("Cantidad de Valores a Generar:");
+
+        javax.swing.GroupLayout jPanel_Param_PoissonLayout = new javax.swing.GroupLayout(jPanel_Param_Poisson);
+        jPanel_Param_Poisson.setLayout(jPanel_Param_PoissonLayout);
+        jPanel_Param_PoissonLayout.setHorizontalGroup(
+            jPanel_Param_PoissonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel_Param_PoissonLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txt_lambda_DistPoisson, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jLabel16)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txt_cantVal_DistPoisson, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(359, Short.MAX_VALUE))
+        );
+        jPanel_Param_PoissonLayout.setVerticalGroup(
+            jPanel_Param_PoissonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel_Param_PoissonLayout.createSequentialGroup()
+                .addGap(0, 10, Short.MAX_VALUE)
+                .addGroup(jPanel_Param_PoissonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel15)
+                    .addComponent(txt_lambda_DistPoisson, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel16)
+                    .addComponent(txt_cantVal_DistPoisson, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+        );
+
+        jPanel_Param_Normal.add(jPanel_Param_Poisson, new org.netbeans.lib.awtextra.AbsoluteConstraints(-10, 0, -1, -1));
+
         javax.swing.GroupLayout jLayeredPane2Layout = new javax.swing.GroupLayout(jLayeredPane2);
         jLayeredPane2.setLayout(jLayeredPane2Layout);
         jLayeredPane2Layout.setHorizontalGroup(
             jLayeredPane2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jLayeredPane2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel_Param_Normal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(33, Short.MAX_VALUE))
+                .addComponent(jPanel_Param_Normal, javax.swing.GroupLayout.PREFERRED_SIZE, 700, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(162, Short.MAX_VALUE))
         );
         jLayeredPane2Layout.setVerticalGroup(
             jLayeredPane2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -317,9 +376,9 @@ public class Inicio extends javax.swing.JPanel {
                             .addComponent(btn_Normal, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(39, 39, 39)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                            .addGroup(layout.createSequentialGroup()
                                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 267, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(65, 65, 65)
+                                .addGap(40, 40, 40)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLayeredPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addGroup(layout.createSequentialGroup()
@@ -334,7 +393,7 @@ public class Inicio extends javax.swing.JPanel {
                                 .addComponent(jLabel12)
                                 .addGap(170, 170, 170)
                                 .addComponent(jLabel13)))))
-                .addContainerGap(52, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -383,6 +442,10 @@ public class Inicio extends javax.swing.JPanel {
         this.btn_Poisson.setVisible(false);
         this.btn_Normal.setVisible(false);
         this.jPanel_Param_Unif.setVisible(true);
+        this.jPanel_Param_Exp.setVisible(false);
+        this.jPanel_Param_Poisson.setVisible(false);
+        this.jPanel_Param_Normal.setVisible(false);
+        
     
     }//GEN-LAST:event_btn_UniformeActionPerformed
 
@@ -391,7 +454,10 @@ public class Inicio extends javax.swing.JPanel {
         this.btn_Uniforme.setVisible(false);
         this.btn_Poisson.setVisible(false);
         this.btn_Normal.setVisible(false);
+        this.jPanel_Param_Unif.setVisible(false);
         this.jPanel_Param_Exp.setVisible(true);
+        this.jPanel_Param_Poisson.setVisible(false);
+        this.jPanel_Param_Normal.setVisible(false);
         
     }//GEN-LAST:event_btn_ExponencialActionPerformed
 
@@ -400,6 +466,9 @@ public class Inicio extends javax.swing.JPanel {
         this.btn_Uniforme.setVisible(false);
         this.btn_Poisson.setVisible(false);
         this.btn_Exponencial.setVisible(false);
+        this.jPanel_Param_Unif.setVisible(false);
+        this.jPanel_Param_Exp.setVisible(false);
+        this.jPanel_Param_Poisson.setVisible(false);
         this.jPanel_Param_Normal.setVisible(true);
         
         
@@ -412,7 +481,7 @@ public class Inicio extends javax.swing.JPanel {
             case "U": 
                         if(this.txt_a.getText().isEmpty()||this.txt_b.getText().isEmpty()||this.txt_cantVal_Unif.getText().isEmpty())
                         {
-                        JOptionPane.showMessageDialog(btn_Exponencial, evt, "Error",WIDTH);
+                        JOptionPane.showMessageDialog(this, "Falta ingresar valor (a ,b,cantidad Valores)", "Error",JOptionPane.ERROR_MESSAGE);
                         } else {
                             
                             int variableA= Integer.parseInt(this.txt_a.getText());
@@ -422,27 +491,66 @@ public class Inicio extends javax.swing.JPanel {
                             this.generarValoresDistUniforme(variableA, variableB,variableCantVal);
                             
                             
-                            
-                            
-                            
         }
                 break;
             case "E":
+                        if(this.txt_cantVal_Exp.getText().isEmpty()||this.txt_lambda.getText().isEmpty())
+                        {
+                        JOptionPane.showMessageDialog(this, "Falta ingresar valor (lambda,cantidad Valores)", "Error",JOptionPane.ERROR_MESSAGE);
+                        }else{
+                        int varCantVal= Integer.parseInt(this.txt_cantVal_Exp.getText());
+                        int varLambda= Integer.parseInt(this.txt_lambda.getText());
+                        
+                        this.generarValoresDistExp(varLambda, varCantVal);
+                        }
                 
                 break;
             case "N":
+                        if(this.txt_cantVal_Norm.getText().isEmpty()||this.txt_media_DistNorm.getText().isEmpty()||this.txt_varianza_DistNorm.getText().isEmpty())
+                        {
+                        JOptionPane.showMessageDialog(this, "Falta ingresar valor (media,varianza,cantidad Valores)", "Error",JOptionPane.ERROR_MESSAGE);
+                        }else{
+                        int varCantVal= Integer.parseInt(this.txt_cantVal_Norm.getText());
+                        int varMedia= Integer.parseInt(this.txt_media_DistNorm.getText());
+                        int varVarianza= Integer.parseInt(this.txt_varianza_DistNorm.getText());
+                        
+                        this.generarValoresDistNormal(varMedia, varVarianza, varCantVal);
+                            
+                        
+                        }   
                 
                 break;
+                
+            case "P":
+                        if(this.txt_lambda_DistPoisson.getText().isEmpty()||this.txt_cantVal_DistPoisson.getText().isEmpty())
+                        {
+                        JOptionPane.showMessageDialog(this, "Falta ingresar valor (lambda,cantidad Valores)", "Error",JOptionPane.ERROR_MESSAGE);
+                        }else{
+                        int varLambda= Integer.parseInt(this.txt_lambda_DistPoisson.getText());
+                        int varCantVal= Integer.parseInt(this.txt_cantVal_DistPoisson.getText());
+                        
+                        }
+            
             default:
-                throw new AssertionError();
+//                throw new AssertionError();
+                        JOptionPane.showMessageDialog(this,"Falta Seleccionar una Distribucion","Error",JOptionPane.ERROR_MESSAGE);
+                
         }
             
-        
-      
-        
-        
-        
     }//GEN-LAST:event_btn_generarActionPerformed
+
+    private void btn_PoissonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_PoissonActionPerformed
+      
+        botonSeleccionado="P";
+        this.btn_Uniforme.setVisible(false);
+        this.btn_Normal.setVisible(false);
+        this.btn_Exponencial.setVisible(false);
+        this.jPanel_Param_Unif.setVisible(false);
+        this.jPanel_Param_Exp.setVisible(false);
+        this.jPanel_Param_Poisson.setVisible(true);
+        this.jPanel_Param_Normal.setVisible(false);
+        
+    }//GEN-LAST:event_btn_PoissonActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -458,6 +566,8 @@ public class Inicio extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -470,16 +580,19 @@ public class Inicio extends javax.swing.JPanel {
     private javax.swing.JLayeredPane jLayeredPane2;
     private javax.swing.JPanel jPanel_Param_Exp;
     private javax.swing.JPanel jPanel_Param_Normal;
+    private javax.swing.JPanel jPanel_Param_Poisson;
     private javax.swing.JPanel jPanel_Param_Unif;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     private javax.swing.JTextField txt_a;
     private javax.swing.JTextField txt_b;
     private javax.swing.JTextField txt_cantIntervalos;
+    private javax.swing.JTextField txt_cantVal_DistPoisson;
     private javax.swing.JTextField txt_cantVal_Exp;
     private javax.swing.JTextField txt_cantVal_Norm;
     private javax.swing.JTextField txt_cantVal_Unif;
     private javax.swing.JTextField txt_lambda;
+    private javax.swing.JTextField txt_lambda_DistPoisson;
     private javax.swing.JTextField txt_media_DistNorm;
     private javax.swing.JTextField txt_varianza_DistNorm;
     // End of variables declaration//GEN-END:variables
