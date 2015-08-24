@@ -4,39 +4,96 @@
  * and open the template in the editor.
  */
 package tp3.simulacion;
+import Generador.Generador;
 import javax.swing.*;
 import java.math.*;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
  * @author Juaco
  */
-public class Inicio extends javax.swing.JPanel {
+public class Inicio extends javax.swing.JFrame {
 
+    
+    private Generador generador;
     private String botonSeleccionado;
+    private DefaultTableModel model;
+   public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(Inicio.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(Inicio.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(Inicio.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(Inicio.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new Inicio().setVisible(true);
+            }
+        });
+    }
     public Inicio() {
+     //no se muestra ninguno de los paneles para ingreso de parametros.Se muestran recien cuando se selecciona una distribucion.
         initComponents();
-        this.jPanel_Param_Exp.setVisible(false);
-        this.jPanel_Param_Unif.setVisible(false);
-        this.jPanel_Param_Normal.setVisible(false);
+        setVisible(true);
+        cargarInterfazTabla();
         
+        this.jPanel_Param_Exp.setVisible(false);
+        this.jPanel_Param_Exp.setSize(872, 66);
+        this.jPanel_Param_Unif.setVisible(false);
+        this.jPanel_Param_Unif.setSize(872, 66);
+        this.jPanel_Param_Normal.setVisible(false);
+        this.jPanel_Param_Normal.setSize(872, 66);
+        this.jPanel_Param_Poisson.setVisible(false);
+        this.jPanel_Param_Poisson.setSize(872, 66);
+    
+    }
+    public void cargarInterfazTabla()
+    {
+        String data[][]= {};
+        String col[]= {"n","Valores Generados"};
+        model= new DefaultTableModel(data,col);
+        
+        this.jTable1.setModel(model);
+        
+    
     }
     public void generarValoresDistUniforme(int paramA, int paramB, int cantVal)
     {
+        //genero valores para una distribucion uniforme.
+        
         double random=Math.random();
         double nuevoRandom ;
         int a = paramA;
         int b= paramB;
         int n;
-        this.jTable1.addRowSelectionInterval(0, cantVal);
+          
         
-        
-        for (int i = 0; i < this.jTable1.getRowCount(); i++) {
+        for (int i = 0; i < cantVal; i++) {
             
             n= i+1;
-            this.jTable1.setValueAt(n, i, 1);
+            model.insertRow(i, new Object[]{});
+            model.setValueAt(n, i, 0);
             nuevoRandom= a + random*(b-a);
-            this.jTable1.setValueAt(nuevoRandom, i, 2);
+            model.setValueAt(nuevoRandom, i, 1);
             random= Math.random();
             
         }
@@ -50,14 +107,13 @@ public class Inicio extends javax.swing.JPanel {
         double nuevoRandom;
         int n;
         
-        this.jTable1.addRowSelectionInterval(0,cantVal);
-        
-        for (int i = 0; i < this.jTable1.getRowCount() ; i++) {
+        for (int i = 0; i < cantVal ; i++) {
             n=i+1;
-            this.jTable1.setValueAt(n, i, 1);
+            model.insertRow(i, new Object[]{});
+            model.setValueAt(n, i, 0);
             z=  Math.sqrt((-2)*Math.log(random1))*Math.cos((2*Math.PI)*random2);
             nuevoRandom= media+(varianza*z);
-            this.jTable1.setValueAt(nuevoRandom, i, 2);
+            model.setValueAt(nuevoRandom, i, 1);
             random1=Math.random();
             random2=Math.random();
                    
@@ -68,13 +124,15 @@ public class Inicio extends javax.swing.JPanel {
         double random1= Math.random();
         double nuevoRandom;
         int n;
-        this.jTable1.addRowSelectionInterval(0,cantVal);
+        
         for (int i = 0; i < cantVal; i++) {
             
             n=i+1;
-            this.jTable1.setValueAt(n, i, 1);
-            nuevoRandom= ((-1)/lambda)*(Math.log((1-random1)));
-            this.jTable1.setValueAt(nuevoRandom, i, 2);
+            model.insertRow(i, new Object[]{});
+            model.setValueAt(n, i, 0);
+//            nuevoRandom= ((-1)/lambda)*(Math.log((1-random1)));
+            nuevoRandom= (-1)*Math.log(1-random1)/lambda;
+            model.setValueAt(nuevoRandom, i, 1);
             random1= Math.random();
            
         }
@@ -85,20 +143,25 @@ public class Inicio extends javax.swing.JPanel {
         double a = Math.pow(Math.E, -(lambda));
         double b=1;
         double i=0;
-        this.jTable1.addRowSelectionInterval(0, cantVal);
+        double ran= Math.random();
         
         for (int j = 0; j < cantVal; j++) {
             n=j+1;
-            this.jTable1.setValueAt(n, j, 1);
-            while(b>=a)
+            model.insertRow(j, new Object[]{});
+            model.setValueAt(n, j, 0);
+            //Generacion del numero aleatorio
+            while(b>=a)//mientras b sea mayor o igual a e^-lambda
             {
-            i++;
-            b*=Math.random();
+            i++;//aumento en 1 el numero
+            b*=ran; // a b lo lo multiplico por un random
             }
-            this.jTable1.setValueAt(i, j, 2);
+            model.setValueAt(i, j, 1);
+            b=1;
             i=0;
-            
+            ran= Math.random();
         }
+        
+        
         
         
     }
@@ -112,6 +175,7 @@ public class Inicio extends javax.swing.JPanel {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+        java.awt.GridBagConstraints gridBagConstraints;
 
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
@@ -128,18 +192,6 @@ public class Inicio extends javax.swing.JPanel {
         jLayeredPane1 = new javax.swing.JLayeredPane();
         Grafico = new javax.swing.JPanel();
         jLayeredPane2 = new javax.swing.JLayeredPane();
-        jPanel_Param_Normal = new javax.swing.JPanel();
-        jLabel7 = new javax.swing.JLabel();
-        txt_media_DistNorm = new javax.swing.JTextField();
-        jLabel8 = new javax.swing.JLabel();
-        txt_varianza_DistNorm = new javax.swing.JTextField();
-        jLabel11 = new javax.swing.JLabel();
-        txt_cantVal_Norm = new javax.swing.JTextField();
-        jPanel_Param_Exp = new javax.swing.JPanel();
-        jLabel6 = new javax.swing.JLabel();
-        txt_lambda = new javax.swing.JTextField();
-        jLabel9 = new javax.swing.JLabel();
-        txt_cantVal_Exp = new javax.swing.JTextField();
         jPanel_Param_Unif = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         txt_a = new javax.swing.JTextField();
@@ -147,6 +199,18 @@ public class Inicio extends javax.swing.JPanel {
         txt_b = new javax.swing.JTextField();
         jLabel10 = new javax.swing.JLabel();
         txt_cantVal_Unif = new javax.swing.JTextField();
+        jPanel_Param_Exp = new javax.swing.JPanel();
+        jLabel6 = new javax.swing.JLabel();
+        txt_lambda = new javax.swing.JTextField();
+        jLabel9 = new javax.swing.JLabel();
+        txt_cantVal_Exp = new javax.swing.JTextField();
+        jPanel_Param_Normal = new javax.swing.JPanel();
+        jLabel7 = new javax.swing.JLabel();
+        txt_media_DistNorm = new javax.swing.JTextField();
+        jLabel8 = new javax.swing.JLabel();
+        txt_varianza_DistNorm = new javax.swing.JTextField();
+        jLabel11 = new javax.swing.JLabel();
+        txt_cantVal_Norm = new javax.swing.JTextField();
         jPanel_Param_Poisson = new javax.swing.JPanel();
         jLabel15 = new javax.swing.JLabel();
         txt_lambda_DistPoisson = new javax.swing.JTextField();
@@ -154,8 +218,10 @@ public class Inicio extends javax.swing.JPanel {
         txt_cantVal_DistPoisson = new javax.swing.JTextField();
         jLabel14 = new javax.swing.JLabel();
         txt_cantIntervalos = new javax.swing.JTextField();
+        btn_graficar = new javax.swing.JButton();
 
-        setEnabled(false);
+        setBounds(new java.awt.Rectangle(400, 400, 500, 500));
+        setMinimumSize(new java.awt.Dimension(1200, 600));
 
         jLabel1.setFont(new java.awt.Font("Arial Black", 1, 13)); // NOI18N
         jLabel1.setText("TP3 - Variables Aleatorias");
@@ -256,82 +322,175 @@ public class Inicio extends javax.swing.JPanel {
         jLayeredPane2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jLayeredPane2.setDoubleBuffered(true);
 
-        jPanel_Param_Normal.setBorder(javax.swing.BorderFactory.createCompoundBorder());
-        jPanel_Param_Normal.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        jLabel7.setText("Media: ");
-        jPanel_Param_Normal.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 50, -1));
-        jPanel_Param_Normal.add(txt_media_DistNorm, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 0, 110, -1));
-
-        jLabel8.setText("Varianza: ");
-        jPanel_Param_Normal.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 0, -1, -1));
-        jPanel_Param_Normal.add(txt_varianza_DistNorm, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 0, 110, -1));
-
-        jLabel11.setText("Cantidad de Valores a Generar:");
-        jPanel_Param_Normal.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(384, 3, -1, -1));
-        jPanel_Param_Normal.add(txt_cantVal_Norm, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 0, 90, -1));
-
-        jPanel_Param_Exp.setEnabled(false);
-        jPanel_Param_Exp.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        jLabel6.setText("Lambda: ");
-        jPanel_Param_Exp.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 0, -1, -1));
-        jPanel_Param_Exp.add(txt_lambda, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 0, 90, -1));
-
-        jLabel9.setText("Cantidad de Valores a Generar:");
-        jPanel_Param_Exp.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 0, -1, -1));
-        jPanel_Param_Exp.add(txt_cantVal_Exp, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 0, 90, -1));
-
-        jPanel_Param_Normal.add(jPanel_Param_Exp, new org.netbeans.lib.awtextra.AbsoluteConstraints(-10, 0, 487, 35));
-
-        jPanel_Param_Unif.setEnabled(false);
-        jPanel_Param_Unif.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        jPanel_Param_Unif.setLayout(new java.awt.GridBagLayout());
 
         jLabel3.setText("a :");
-        jPanel_Param_Unif.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 3, 24, -1));
-        jPanel_Param_Unif.add(txt_a, new org.netbeans.lib.awtextra.AbsoluteConstraints(41, 0, 90, -1));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.ipadx = 8;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(3, 12, 0, 0);
+        jPanel_Param_Unif.add(jLabel3, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridheight = 2;
+        gridBagConstraints.ipadx = 84;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 0);
+        jPanel_Param_Unif.add(txt_a, gridBagConstraints);
 
         jLabel4.setText("b :");
-        jPanel_Param_Unif.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(162, 3, -1, -1));
-        jPanel_Param_Unif.add(txt_b, new org.netbeans.lib.awtextra.AbsoluteConstraints(183, 0, 90, -1));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(3, 31, 0, 0);
+        jPanel_Param_Unif.add(jLabel4, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridheight = 2;
+        gridBagConstraints.ipadx = 84;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 0);
+        jPanel_Param_Unif.add(txt_b, gridBagConstraints);
 
         jLabel10.setText("Cantidad de Valores a Generar:");
-        jPanel_Param_Unif.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(261, 8, -1, -1));
-        jPanel_Param_Unif.add(txt_cantVal_Unif, new org.netbeans.lib.awtextra.AbsoluteConstraints(447, 5, 90, -1));
+        jPanel_Param_Unif.add(jLabel10, new java.awt.GridBagConstraints());
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 5;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridheight = 4;
+        gridBagConstraints.ipadx = 84;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(5, 5, 0, 0);
+        jPanel_Param_Unif.add(txt_cantVal_Unif, gridBagConstraints);
 
-        jPanel_Param_Normal.add(jPanel_Param_Unif, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
+        jPanel_Param_Exp.setLayout(new java.awt.GridBagLayout());
+
+        jLabel6.setText("Lambda: ");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.ipadx = 7;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 10, 0, 0);
+        jPanel_Param_Exp.add(jLabel6, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridheight = 2;
+        gridBagConstraints.ipadx = 84;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 6, 13, 0);
+        jPanel_Param_Exp.add(txt_lambda, gridBagConstraints);
+
+        jLabel9.setText("Cantidad de Valores a Generar:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 10, 0, 0);
+        jPanel_Param_Exp.add(jLabel9, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridheight = 2;
+        gridBagConstraints.ipadx = 84;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 9, 13, 37);
+        jPanel_Param_Exp.add(txt_cantVal_Exp, gridBagConstraints);
+
+        jPanel_Param_Normal.setBorder(javax.swing.BorderFactory.createCompoundBorder());
+        jPanel_Param_Normal.setLayout(new java.awt.GridBagLayout());
+
+        jLabel7.setText("Media: ");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.ipadx = 7;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 10, 0, 0);
+        jPanel_Param_Normal.add(jLabel7, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridheight = 3;
+        gridBagConstraints.ipadx = 104;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        jPanel_Param_Normal.add(txt_media_DistNorm, gridBagConstraints);
+
+        jLabel8.setText("Varianza: ");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        jPanel_Param_Normal.add(jLabel8, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridheight = 3;
+        gridBagConstraints.ipadx = 104;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 1, 0, 0);
+        jPanel_Param_Normal.add(txt_varianza_DistNorm, gridBagConstraints);
+
+        jLabel11.setText("Cantidad de Valores a Generar:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 4;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridwidth = 10;
+        gridBagConstraints.gridheight = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(3, 54, 0, 0);
+        jPanel_Param_Normal.add(jLabel11, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 14;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridheight = 3;
+        gridBagConstraints.ipadx = 84;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 0);
+        jPanel_Param_Normal.add(txt_cantVal_Norm, gridBagConstraints);
+
+        jPanel_Param_Poisson.setMinimumSize(new java.awt.Dimension(700, 27));
+        jPanel_Param_Poisson.setPreferredSize(new java.awt.Dimension(670, 22));
+        jPanel_Param_Poisson.setLayout(new java.awt.GridBagLayout());
 
         jLabel15.setText("Lambda:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.ipadx = 7;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(13, 12, 0, 0);
+        jPanel_Param_Poisson.add(jLabel15, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridheight = 2;
+        gridBagConstraints.ipadx = 95;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(10, 5, 0, 0);
+        jPanel_Param_Poisson.add(txt_lambda_DistPoisson, gridBagConstraints);
 
         jLabel16.setText("Cantidad de Valores a Generar:");
-
-        javax.swing.GroupLayout jPanel_Param_PoissonLayout = new javax.swing.GroupLayout(jPanel_Param_Poisson);
-        jPanel_Param_Poisson.setLayout(jPanel_Param_PoissonLayout);
-        jPanel_Param_PoissonLayout.setHorizontalGroup(
-            jPanel_Param_PoissonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel_Param_PoissonLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txt_lambda_DistPoisson, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jLabel16)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txt_cantVal_DistPoisson, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(359, Short.MAX_VALUE))
-        );
-        jPanel_Param_PoissonLayout.setVerticalGroup(
-            jPanel_Param_PoissonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel_Param_PoissonLayout.createSequentialGroup()
-                .addGap(0, 10, Short.MAX_VALUE)
-                .addGroup(jPanel_Param_PoissonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel15)
-                    .addComponent(txt_lambda_DistPoisson, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel16)
-                    .addComponent(txt_cantVal_DistPoisson, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-        );
-
-        jPanel_Param_Normal.add(jPanel_Param_Poisson, new org.netbeans.lib.awtextra.AbsoluteConstraints(-10, 0, -1, -1));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(13, 18, 0, 0);
+        jPanel_Param_Poisson.add(jLabel16, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridheight = 2;
+        gridBagConstraints.ipadx = 95;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(10, 5, 0, 359);
+        jPanel_Param_Poisson.add(txt_cantVal_DistPoisson, gridBagConstraints);
 
         javax.swing.GroupLayout jLayeredPane2Layout = new javax.swing.GroupLayout(jLayeredPane2);
         jLayeredPane2.setLayout(jLayeredPane2Layout);
@@ -341,20 +500,55 @@ public class Inicio extends javax.swing.JPanel {
                 .addContainerGap()
                 .addComponent(jPanel_Param_Normal, javax.swing.GroupLayout.PREFERRED_SIZE, 700, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(162, Short.MAX_VALUE))
+            .addGroup(jLayeredPane2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jLayeredPane2Layout.createSequentialGroup()
+                    .addGap(0, 0, Short.MAX_VALUE)
+                    .addComponent(jPanel_Param_Exp, javax.swing.GroupLayout.PREFERRED_SIZE, 700, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(0, 0, Short.MAX_VALUE)))
+            .addGroup(jLayeredPane2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jLayeredPane2Layout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(jPanel_Param_Unif, javax.swing.GroupLayout.PREFERRED_SIZE, 667, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(195, Short.MAX_VALUE)))
+            .addGroup(jLayeredPane2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jLayeredPane2Layout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(jPanel_Param_Poisson, javax.swing.GroupLayout.DEFAULT_SIZE, 850, Short.MAX_VALUE)
+                    .addContainerGap()))
         );
         jLayeredPane2Layout.setVerticalGroup(
             jLayeredPane2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jLayeredPane2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel_Param_Normal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanel_Param_Normal, javax.swing.GroupLayout.DEFAULT_SIZE, 27, Short.MAX_VALUE)
                 .addContainerGap())
+            .addGroup(jLayeredPane2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jLayeredPane2Layout.createSequentialGroup()
+                    .addGap(0, 6, Short.MAX_VALUE)
+                    .addComponent(jPanel_Param_Exp, javax.swing.GroupLayout.PREFERRED_SIZE, 27, Short.MAX_VALUE)
+                    .addGap(0, 6, Short.MAX_VALUE)))
+            .addGroup(jLayeredPane2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jLayeredPane2Layout.createSequentialGroup()
+                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel_Param_Unif, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+            .addGroup(jLayeredPane2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jLayeredPane2Layout.createSequentialGroup()
+                    .addGap(4, 4, 4)
+                    .addComponent(jPanel_Param_Poisson, javax.swing.GroupLayout.DEFAULT_SIZE, 45, Short.MAX_VALUE)
+                    .addGap(4, 4, 4)))
         );
+        jLayeredPane2.setLayer(jPanel_Param_Unif, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPane2.setLayer(jPanel_Param_Exp, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jLayeredPane2.setLayer(jPanel_Param_Normal, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPane2.setLayer(jPanel_Param_Poisson, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         jLabel14.setText("Cantidad Intervalos:");
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
+        btn_graficar.setText("Graficar");
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
@@ -384,7 +578,9 @@ public class Inicio extends javax.swing.JPanel {
                                     .addGroup(layout.createSequentialGroup()
                                         .addComponent(jLabel14)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(txt_cantIntervalos, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                        .addComponent(txt_cantIntervalos, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(35, 35, 35)
+                                        .addComponent(btn_graficar, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE))))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLayeredPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
@@ -428,20 +624,20 @@ public class Inicio extends javax.swing.JPanel {
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(jLabel14)
-                                    .addComponent(txt_cantIntervalos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(13, 13, 13)
+                                    .addComponent(txt_cantIntervalos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(btn_graficar))
+                                .addGap(11, 11, 11)
                                 .addComponent(jLayeredPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))))
-                .addContainerGap(78, Short.MAX_VALUE))
+                .addContainerGap(450, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
     private void btn_UniformeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_UniformeActionPerformed
         botonSeleccionado="U";
-        this.btn_Exponencial.setVisible(false);
-        this.btn_Poisson.setVisible(false);
-        this.btn_Normal.setVisible(false);
+        this.jLayeredPane2.setPosition(this.jPanel_Param_Unif, 5);
         this.jPanel_Param_Unif.setVisible(true);
+//        
         this.jPanel_Param_Exp.setVisible(false);
         this.jPanel_Param_Poisson.setVisible(false);
         this.jPanel_Param_Normal.setVisible(false);
@@ -451,11 +647,10 @@ public class Inicio extends javax.swing.JPanel {
 
     private void btn_ExponencialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_ExponencialActionPerformed
         botonSeleccionado="E";
-        this.btn_Uniforme.setVisible(false);
-        this.btn_Poisson.setVisible(false);
-        this.btn_Normal.setVisible(false);
-        this.jPanel_Param_Unif.setVisible(false);
+        this.jLayeredPane2.setPosition(this.jPanel_Param_Exp, 5);
         this.jPanel_Param_Exp.setVisible(true);
+        this.jPanel_Param_Unif.setVisible(false);
+
         this.jPanel_Param_Poisson.setVisible(false);
         this.jPanel_Param_Normal.setVisible(false);
         
@@ -463,20 +658,27 @@ public class Inicio extends javax.swing.JPanel {
 
     private void btn_NormalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_NormalActionPerformed
         botonSeleccionado="N";
-        this.btn_Uniforme.setVisible(false);
-        this.btn_Poisson.setVisible(false);
-        this.btn_Exponencial.setVisible(false);
+        this.jLayeredPane2.setPosition(this.jPanel_Param_Normal, 5);
+        this.jPanel_Param_Normal.setVisible(true);
         this.jPanel_Param_Unif.setVisible(false);
         this.jPanel_Param_Exp.setVisible(false);
         this.jPanel_Param_Poisson.setVisible(false);
-        this.jPanel_Param_Normal.setVisible(true);
-        
+//       
+//        
         
     }//GEN-LAST:event_btn_NormalActionPerformed
 
+    private void Clear_Table(){
+       for (int i = 0; i < this.jTable1.getRowCount(); i++) {
+           model.removeRow(i);
+           i-=1;
+       }}
+   
     private void btn_generarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_generarActionPerformed
        // Aca se generan los datos de la tabla y tambien el grafico 
         
+        
+        this.Clear_Table();
         switch (botonSeleccionado) {
             case "U": 
                         if(this.txt_a.getText().isEmpty()||this.txt_b.getText().isEmpty()||this.txt_cantVal_Unif.getText().isEmpty())
@@ -528,8 +730,9 @@ public class Inicio extends javax.swing.JPanel {
                         }else{
                         int varLambda= Integer.parseInt(this.txt_lambda_DistPoisson.getText());
                         int varCantVal= Integer.parseInt(this.txt_cantVal_DistPoisson.getText());
-                        
+                        this.generarValoresDistPoisson(varLambda, varCantVal);
                         }
+            break;
             
             default:
 //                throw new AssertionError();
@@ -541,13 +744,12 @@ public class Inicio extends javax.swing.JPanel {
 
     private void btn_PoissonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_PoissonActionPerformed
       
-        botonSeleccionado="P";
-        this.btn_Uniforme.setVisible(false);
-        this.btn_Normal.setVisible(false);
-        this.btn_Exponencial.setVisible(false);
+        botonSeleccionado = "P";
+        this.jLayeredPane2.setPosition(this.jPanel_Param_Poisson, 5);
+        this.jPanel_Param_Poisson.setVisible(true);
+
         this.jPanel_Param_Unif.setVisible(false);
         this.jPanel_Param_Exp.setVisible(false);
-        this.jPanel_Param_Poisson.setVisible(true);
         this.jPanel_Param_Normal.setVisible(false);
         
     }//GEN-LAST:event_btn_PoissonActionPerformed
@@ -560,6 +762,7 @@ public class Inicio extends javax.swing.JPanel {
     private javax.swing.JButton btn_Poisson;
     private javax.swing.JButton btn_Uniforme;
     private javax.swing.JButton btn_generar;
+    private javax.swing.JButton btn_graficar;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;

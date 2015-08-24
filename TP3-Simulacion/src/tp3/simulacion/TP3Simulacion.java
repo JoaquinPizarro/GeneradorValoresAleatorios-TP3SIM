@@ -13,7 +13,8 @@ public class TP3Simulacion {
 
     public static void main(String[] args) {
       
-        new Inicio();
+        Inicio ini= new Inicio();
+        ini.setVisible(true);
         
         
         
